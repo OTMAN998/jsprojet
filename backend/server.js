@@ -4,14 +4,13 @@ const path = require('path');
 
 const app = express();
 
-// Middleware
+
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from frontend
+
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Sample books data
 let books = [
     {
         id: 1,
@@ -48,14 +47,13 @@ let books = [
     }
 ];
 
-// API Routes
-// GET /api/books - Get all books
+
 app.get('/api/books', (req, res) => {
     console.log('GET /api/books - Returning', books.length, 'books');
     res.json(books);
 });
 
-// GET /api/stats - Get statistics
+
 app.get('/api/stats', (req, res) => {
     const stats = {
         totalBooks: books.length,
@@ -66,7 +64,7 @@ app.get('/api/stats', (req, res) => {
     res.json(stats);
 });
 
-// POST /api/books - Add new book
+
 app.post('/api/books', (req, res) => {
     const newBook = {
         id: books.length > 0 ? Math.max(...books.map(b => b.id)) + 1 : 1,
@@ -79,7 +77,7 @@ app.post('/api/books', (req, res) => {
     res.status(201).json(newBook);
 });
 
-// PUT /api/books/:id - Update book
+
 app.put('/api/books/:id', (req, res) => {
     const bookId = parseInt(req.params.id);
     const index = books.findIndex(b => b.id === bookId);
@@ -92,7 +90,7 @@ app.put('/api/books/:id', (req, res) => {
     }
 });
 
-// DELETE /api/books/:id - Delete book
+
 app.delete('/api/books/:id', (req, res) => {
     const bookId = parseInt(req.params.id);
     const index = books.findIndex(b => b.id === bookId);
@@ -108,7 +106,7 @@ app.delete('/api/books/:id', (req, res) => {
     }
 });
 
-// GET /api/books/:id - Get book by ID
+
 app.get('/api/books/:id', (req, res) => {
     const bookId = parseInt(req.params.id);
     const book = books.find(b => b.id === bookId);
@@ -120,7 +118,7 @@ app.get('/api/books/:id', (req, res) => {
     }
 });
 
-// Frontend Routes
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
@@ -129,7 +127,7 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/dashboard.html'));
 });
 
-// Start server
+
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log('='.repeat(60));

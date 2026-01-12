@@ -1,11 +1,11 @@
-// Configuration
+
 const API_BASE_URL = 'http://localhost:3000/api';
 
-// State
+
 let books = [];
 let currentBookId = null;
 
-// DOM Elements
+
 const loginPage = document.getElementById('loginPage');
 const mainApp = document.getElementById('mainApp');
 const loginForm = document.getElementById('loginForm');
@@ -17,11 +17,11 @@ const searchBtn = document.getElementById('searchBtn');
 const bookModal = document.getElementById('bookModal');
 const bookForm = document.getElementById('bookForm');
 
-// Initialize Application
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Initializing Bibliothèque Manager...');
     
-    // Check if already logged in
+    
     const isLoggedIn = localStorage.getItem('bibliothequeLoggedIn') === 'true';
     
     if (isLoggedIn) {
@@ -30,48 +30,48 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoginPage();
     }
     
-    // Setup event listeners
+    
     setupEventListeners();
     
-    // Test API connection
+    
     testAPIConnection();
 });
 
-// Setup Event Listeners
+
 function setupEventListeners() {
     // Login Form
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
     
-    // Logout Button
+   
     if (logoutBtn) {
         logoutBtn.addEventListener('click', handleLogout);
     }
     
-    // Refresh Button
+    
     if (refreshBtn) {
         refreshBtn.addEventListener('click', loadData);
     }
     
-    // Add Book Button
+    
     if (addBookBtn) {
         addBookBtn.addEventListener('click', () => {
             showBookForm('add');
         });
     }
     
-    // Search Button
+    
     if (searchBtn) {
         searchBtn.addEventListener('click', searchBooks);
     }
     
-    // Book Form
+    
     if (bookForm) {
         bookForm.addEventListener('submit', handleBookFormSubmit);
     }
     
-    // Navigation
+    
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.addEventListener('click', () => {
@@ -81,7 +81,7 @@ function setupEventListeners() {
     });
 }
 
-// Test API Connection
+
 async function testAPIConnection() {
     try {
         const response = await fetch(`${API_BASE_URL}/books`);
@@ -104,27 +104,27 @@ async function testAPIConnection() {
     }
 }
 
-// Show Login Page
+
 function showLoginPage() {
     loginPage.classList.add('active');
     mainApp.classList.remove('active');
 }
 
-// Show Main App
+
 async function showMainApp() {
     loginPage.classList.remove('active');
     mainApp.classList.add('active');
     
-    // Load initial data
+    
     await loadData();
     
-    // Show dashboard by default
+    
     showPage('dashboard');
 }
 
-// Show Page
+
 function showPage(pageName) {
-    // Update navigation
+    
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.classList.remove('active');
@@ -133,13 +133,13 @@ function showPage(pageName) {
         }
     });
     
-    // Update page title
+    
     const pageTitle = document.getElementById('pageTitle');
     if (pageTitle) {
         pageTitle.textContent = pageName === 'dashboard' ? 'Tableau de Bord' : 'Gestion des Livres';
     }
     
-    // Show selected page
+    
     const pages = document.querySelectorAll('.content-page');
     pages.forEach(page => {
         page.classList.remove('active');
@@ -150,22 +150,21 @@ function showPage(pageName) {
         selectedPage.classList.add('active');
     }
     
-    // Load books management table if needed
+    
     if (pageName === 'books') {
         loadBooksManagementTable();
     }
 }
 
-// Handle Login
+
 async function handleLogin(e) {
     e.preventDefault();
     
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     
-    // Simple authentication
+    
     if (username === 'admin' && password === 'admin') {
-        // Test API connection
         const apiConnected = await testAPIConnection();
         
         if (apiConnected) {
@@ -179,26 +178,26 @@ async function handleLogin(e) {
     }
 }
 
-// Handle Logout
+
 function handleLogout() {
     localStorage.removeItem('bibliothequeLoggedIn');
     showLoginPage();
 }
 
-// Load Data
+
 async function loadData() {
     try {
-        // Load books
+        
         const booksResponse = await fetch(`${API_BASE_URL}/books`);
         if (!booksResponse.ok) throw new Error('Failed to load books');
         books = await booksResponse.json();
         
-        // Load stats
+      
         const statsResponse = await fetch(`${API_BASE_URL}/stats`);
         if (!statsResponse.ok) throw new Error('Failed to load stats');
         const stats = await statsResponse.json();
         
-        // Update UI
+        
         renderStats(stats);
         renderBooksTable();
         
@@ -208,7 +207,7 @@ async function loadData() {
     }
 }
 
-// Render Statistics
+
 function renderStats(stats) {
     const statsGrid = document.getElementById('statsGrid');
     if (!statsGrid) return;
@@ -256,12 +255,12 @@ function renderStats(stats) {
     `;
 }
 
-// Render Books Table (for dashboard)
+
 function renderBooksTable() {
     const tableBody = document.getElementById('booksTable');
     if (!tableBody) return;
     
-    // Show only 5 most recent books
+    
     const recentBooks = [...books].slice(0, 5);
     
     tableBody.innerHTML = '';
@@ -305,7 +304,7 @@ function renderBooksTable() {
     });
 }
 
-// Load Books Management Table
+
 async function loadBooksManagementTable() {
     const tableBody = document.getElementById('booksManagementTable');
     if (!tableBody) return;
@@ -369,7 +368,7 @@ async function loadBooksManagementTable() {
     }
 }
 
-// Show Book Form
+
 function showBookForm(mode, bookId = null) {
     currentBookId = bookId;
     
@@ -399,13 +398,13 @@ function showBookForm(mode, bookId = null) {
     bookModal.classList.add('active');
 }
 
-// Hide Modal
+
 function hideModal() {
     bookModal.classList.remove('active');
     currentBookId = null;
 }
 
-// Handle Book Form Submission
+
 async function handleBookFormSubmit(e) {
     e.preventDefault();
     
@@ -424,11 +423,11 @@ async function handleBookFormSubmit(e) {
         let url;
         
         if (currentBookId) {
-            // Update existing book
+            
             method = 'PUT';
             url = `${API_BASE_URL}/books/${currentBookId}`;
         } else {
-            // Add new book
+            
             method = 'POST';
             url = `${API_BASE_URL}/books`;
         }
@@ -445,10 +444,10 @@ async function handleBookFormSubmit(e) {
             alert(currentBookId ? 'Livre modifié avec succès !' : 'Livre ajouté avec succès !');
             hideModal();
             
-            // Reload data
+            
             await loadData();
             
-            // If on books management page, reload that table too
+            
             const booksPage = document.getElementById('booksPage');
             if (booksPage.classList.contains('active')) {
                 await loadBooksManagementTable();
@@ -462,12 +461,12 @@ async function handleBookFormSubmit(e) {
     }
 }
 
-// Edit Book
+
 function editBook(bookId) {
     showBookForm('edit', bookId);
 }
 
-// Delete Book
+
 async function deleteBook(bookId) {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')) {
         return;
@@ -481,10 +480,10 @@ async function deleteBook(bookId) {
         if (response.ok) {
             alert('Livre supprimé avec succès !');
             
-            // Reload data
+            
             await loadData();
             
-            // If on books management page, reload that table too
+            
             const booksPage = document.getElementById('booksPage');
             if (booksPage.classList.contains('active')) {
                 await loadBooksManagementTable();
@@ -498,7 +497,7 @@ async function deleteBook(bookId) {
     }
 }
 
-// Search Books
+
 async function searchBooks() {
     const searchInput = document.getElementById('searchInput');
     const query = searchInput.value.trim().toLowerCase();
@@ -558,7 +557,7 @@ async function searchBooks() {
     });
 }
 
-// Make functions globally available
+
 window.editBook = editBook;
 window.deleteBook = deleteBook;
 window.hideModal = hideModal;
